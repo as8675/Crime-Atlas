@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mongoprojectagentqs-dev-ca079-authRole",
+      "UnauthRoleArn": "arn:aws:iam::992382548485:role/amplify-mongoprojectagentqs-dev-ca079-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::992382548485:role/amplify-mongoprojectagentqs-dev-ca079-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mongoprojectagentqs-dev-ca079-deployment",
+      "UnauthRoleName": "amplify-mongoprojectagentqs-dev-ca079-unauthRole",
+      "StackName": "amplify-mongoprojectagentqs-dev-ca079",
+      "StackId": "arn:aws:cloudformation:us-east-1:992382548485:stack/amplify-mongoprojectagentqs-dev-ca079/e98b2350-116e-11f0-80a8-0e9a8e1bb979",
+      "AmplifyAppId": "d1n8ks5gl69dyt"
+    }
+  }
+}

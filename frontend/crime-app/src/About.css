@@ -1,0 +1,71 @@
+.about-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    text-align: left; 
+  }
+  
+  .about-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .about-intro {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+  
+  .about-subtitle {
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #0056b3;
+  }
+  
+  .about-page p {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+  }
+  
+  .data-glossary table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  
+  .data-glossary th,
+  .data-glossary td {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  
+  .data-glossary th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .data-glossary tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  .credits-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #444;
+  }
+  
+  .credits-list li::before {
+    content: "👤 ";
+    margin-right: 5px;
+  }
+  
