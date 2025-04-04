@@ -29,7 +29,7 @@ function KeywordSearch() {
     const [crimeData, setCrimeData] = useState([]);
     const [imageData, setImageData] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(1000);
+    const [itemsPerPage] = useState(1000);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
