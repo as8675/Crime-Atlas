@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { BASE_URL } from './constants';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -35,7 +36,7 @@ function AdvanceSearch({ user }) {
 
     const fetchLocations = async (location, maxDistance) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:5001/get_crime_data_by_location?location=${location}&maxDistance=${maxDistance}`);
+            const response = await axios.get(`${BASE_URL}/get_crime_data_by_location?location=${location}&maxDistance=${maxDistance}`);
             setCrimeLocations(response.data);
         } catch (error) {
             console.error('Error fetching locations:', error);
@@ -44,7 +45,7 @@ function AdvanceSearch({ user }) {
 
     const fetchCrimeData = async (longitude, latitude) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:5001/get_crime_data_at_coordinates?longitude=${longitude}&latitude=${latitude}`);
+            const response = await axios.get(`${BASE_URL}/get_crime_data_at_coordinates?longitude=${longitude}&latitude=${latitude}`);
             setCrimeData(response.data.crimeData);
             setImageData(response.data.imageData);
             setComments(response.data.comments || []);
@@ -62,7 +63,7 @@ function AdvanceSearch({ user }) {
         if (!newComment.trim()) return;
 
         try {
-            const response = await axios.post('http://127.0.0.1:5001/add_comment', {
+            const response = await axios.post('${BASE_URL}/add_comment', {
                 longitude,
                 latitude,
                 text: newComment,
@@ -117,8 +118,8 @@ function AdvanceSearch({ user }) {
                                     ))}
                                     {imageData && (
                                         <div>
-                                            <a href={`http://127.0.0.1:5001/images/${imageData.filename}`} target="_blank" rel="noopener noreferrer">
-                                                <img src={`http://127.0.0.1:5001/images/${imageData.filename}`} alt="Street View" style={{ width: '300px' }} />
+                                            <a href={`${BASE_URL}/images/${imageData.filename}`} target="_blank" rel="noopener noreferrer">
+                                                <img src={`${BASE_URL}/images/${imageData.filename}`} alt="Street View" style={{ width: '300px' }} />
                                             </a>
                                         </div>
                                     )}

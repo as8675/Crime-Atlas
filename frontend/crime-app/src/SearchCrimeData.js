@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { BASE_URL } from './constants';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -19,7 +20,7 @@ function SearchCrimeData() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5001/get_details')
+    axios.get('${BASE_URL}/get_details')
       .then(res => setCrimeDescriptions(res.data.values))
       .catch(err => console.error('Error fetching crime descriptions:', err));
   }, []);
@@ -38,7 +39,7 @@ function SearchCrimeData() {
       };
       if (!formattedInputs.date_occ) delete formattedInputs.date_occ;
 
-      const res = await axios.get('http://localhost:5001/get_crime_data', { params: formattedInputs });
+      const res = await axios.get('${BASE_URL}/get_crime_data', { params: formattedInputs });
       if (res.status === 404 || res.data.length === 0) {
         setError('No documents found with the specified criteria.');
         setResults([]);
