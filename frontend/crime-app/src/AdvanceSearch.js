@@ -3,6 +3,7 @@ import axios from 'axios';
 import { BASE_URL } from './constants';
 import placeholderIcon from './placeholder.png';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { CircularProgress } from '@mui/material';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './AdvanceSearch.css';
@@ -34,25 +35,33 @@ function AdvanceSearch({ user }) {
     const [imageData, setImageData] = useState(null);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [pinLoading, setPinLoading] = useState(false);
 
     const fetchLocations = async (location, maxDistance) => {
+        setLoading(true);
         try {
             const response = await axios.get(`${BASE_URL}/get_crime_data_by_location?location=${location}&maxDistance=${maxDistance}`);
             setCrimeLocations(response.data);
         } catch (error) {
             console.error('Error fetching locations:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const fetchCrimeData = async (longitude, latitude) => {
+        setPinLoading(true);
+        setSelectedLocation({ longitude, latitude });
         try {
             const response = await axios.get(`${BASE_URL}/get_crime_data_at_coordinates?longitude=${longitude}&latitude=${latitude}`);
             setCrimeData(response.data.crimeData);
             setImageData(response.data.imageData);
             setComments(response.data.comments || []);
-            setSelectedLocation({ longitude, latitude });
         } catch (error) {
             console.error('Error fetching crime data:', error);
+        } finally {
+            setPinLoading(false);
         }
     };
 
@@ -68,7 +77,7 @@ function AdvanceSearch({ user }) {
                 longitude,
                 latitude,
                 text: newComment,
-                user: user ? user.email : 'Anonymous' // Use logged-in user's email
+                user: user ? user.email : 'Anonymous'
             });
             setComments([...comments, response.data.comment]);
             setNewComment('');
@@ -77,13 +86,15 @@ function AdvanceSearch({ user }) {
         }
     };
 
-    // Rest of the component remains unchanged
     return (
         <div>
             <div className="search-controls">
                 <input type="text" placeholder="Enter location (e.g., Los Angeles)" value={location} onChange={(e) => setLocation(e.target.value)} />
                 <input type="number" placeholder="Max distance (meters)" value={maxDistance} onChange={(e) => setMaxDistance(e.target.value)} />
-                <button onClick={handleSearch}>Search</button>
+                <button onClick={handleSearch} disabled={loading}>
+                    {loading ? 'Searching...' : 'Search'}
+                </button>
+                {loading && <CircularProgress size={20} style={{ marginLeft: '10px' }} />}
             </div>
             <MapContainer center={[34.0522, -118.2437]} zoom={10} className="map-container" style={{ height: '600px', width: '100%' }}>
                 <TileLayer
@@ -101,58 +112,64 @@ function AdvanceSearch({ user }) {
                     >
                         <Popup>
                             {selectedLocation && selectedLocation.longitude === loc.longitude && selectedLocation.latitude === loc.latitude ? (
-                                <div className='scrollable-popup'>
-                                    <h2>Crime Data</h2>
-                                    {crimeData && crimeData.map((data, idx) => (
-                                        <div
-                                            key={idx}
-                                            style={{
-                                                background: getCrimeIntensityColor(data.occurrences),
-                                                padding: '5px',
-                                                margin: '2px',
-                                                borderRadius: '5px',
-                                                fontSize: '12px'
-                                            }}
-                                        >
-                                            {simplifyCrimeType(data.crimeType)}: <strong>{data.occurrences}</strong>
-                                        </div>
-                                    ))}
-                                    {imageData && (
-                                        <div>
-                                            <a href={`${BASE_URL}/images/${imageData.filename}`} target="_blank" rel="noopener noreferrer">
-                                                <img src={`${BASE_URL}/images/${imageData.filename}`} alt="Street View" style={{ width: '300px' }} />
-                                            </a>
-                                        </div>
-                                    )}
-                                    <h3>Comments</h3>
-                                    {comments.length > 0 ? (
-                                        <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                            {comments.map((comment, idx) => (
-                                                <li key={idx} style={{ margin: '5px 0', fontSize: '12px' }}>
-                                                    <strong>{comment.user}:</strong> {comment.text} <br />
-                                                    <small>{new Date(comment.createdAt).toLocaleString()}</small>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <p>No comments yet.</p>
-                                    )}
-                                    <div>
-                                        <input
-                                            type="text"
-                                            className='comment-input'
-                                            placeholder="Add a comment"
-                                            value={newComment}
-                                            onChange={(e) => setNewComment(e.target.value)}
-                                        />
-                                        <button className='submit-comment'
-                                            onClick={() => handleAddComment(loc.longitude, loc.latitude)}
-                                        >
-                                            Submit
-                                        </button>
+                                pinLoading ? (
+                                    <div style={{ textAlign: 'center', padding: '10px' }}>
+                                        <CircularProgress size={24} />
                                     </div>
-                                </div>
-                            ) : "Loading..."}
+                                ) : (
+                                    <div className='scrollable-popup'>
+                                        <h2>Crime Data</h2>
+                                        {crimeData && crimeData.map((data, idx) => (
+                                            <div
+                                                key={idx}
+                                                style={{
+                                                    background: getCrimeIntensityColor(data.occurrences),
+                                                    padding: '5px',
+                                                    margin: '2px',
+                                                    borderRadius: '5px',
+                                                    fontSize: '12px'
+                                                }}
+                                            >
+                                                {simplifyCrimeType(data.crimeType)}: <strong>{data.occurrences}</strong>
+                                            </div>
+                                        ))}
+                                        {imageData && (
+                                            <div>
+                                                <a href={`${BASE_URL}/images/${imageData.filename}`} target="_blank" rel="noopener noreferrer">
+                                                    <img src={`${BASE_URL}/images/${imageData.filename}`} alt="Street View" style={{ width: '300px' }} />
+                                                </a>
+                                            </div>
+                                        )}
+                                        <h3>Comments</h3>
+                                        {comments.length > 0 ? (
+                                            <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                                {comments.map((comment, idx) => (
+                                                    <li key={idx} style={{ margin: '5px 0', fontSize: '12px' }}>
+                                                        <strong>{comment.user}:</strong> {comment.text} <br />
+                                                        <small>{new Date(comment.createdAt).toLocaleString()}</small>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p>No comments yet.</p>
+                                        )}
+                                        <div>
+                                            <input
+                                                type="text"
+                                                className='comment-input'
+                                                placeholder="Add a comment"
+                                                value={newComment}
+                                                onChange={(e) => setNewComment(e.target.value)}
+                                            />
+                                            <button className='submit-comment'
+                                                onClick={() => handleAddComment(loc.longitude, loc.latitude)}
+                                            >
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                            ) : "Click to load data"}
                         </Popup>
                     </Marker>
                 ))}

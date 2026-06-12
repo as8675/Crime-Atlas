@@ -3,6 +3,7 @@ import axios from 'axios';
 import { BASE_URL } from './constants';
 import placeholderIcon from './placeholder.png';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { CircularProgress } from '@mui/material';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './SearchCrimeData.css';
@@ -19,6 +20,7 @@ function SearchCrimeData() {
   const [crimeDescriptions, setCrimeDescriptions] = useState([]);
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axios.get(`${BASE_URL}/get_details`)
@@ -33,6 +35,7 @@ function SearchCrimeData() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       const formattedInputs = {
         ...inputs,
@@ -50,6 +53,8 @@ function SearchCrimeData() {
     } catch (err) {
       console.error('Error fetching data:', err);
       setError(err.response?.status === 404 ? 'No documents found.' : 'Failed to fetch data.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,7 +100,9 @@ function SearchCrimeData() {
           </select>
         </div>
 
-        <button type="submit" className="submit-button">Search</button>
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? <CircularProgress size={16} style={{ color: '#fff', verticalAlign: 'middle' }} /> : 'Search'}
+        </button>
       </form>
 
       {error && <p className="error-message">{error}</p>}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { Button, Tab, Tabs, TextField } from "@mui/material";
+import { Button, CircularProgress, Tab, Tabs, TextField } from "@mui/material";
 import { BASE_URL } from './constants';
 import LOGIN_IMAGE_URL from './Logo.png';
 import "./Login.css";
@@ -14,15 +14,16 @@ export default function Login() {
     const [name, setName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleTabChange = (e, newValue) => {
         setCurrentTabIndex(newValue);
-        setShowVerificationForm(false); 
+        setShowVerificationForm(false);
         setError("");
     };
 
-    // Login function
     const handleLoginOnClick = async () => {
+        setLoading(true);
         try {
             const response = await fetch(`${BASE_URL}/login`, {
                 method: 'POST',
@@ -30,15 +31,17 @@ export default function Login() {
                 body: JSON.stringify({ email, password })
             });
             if (!response.ok) throw new Error('Failed to log in');
-            navigate('/dashboard'); // Navigate on successful login
+            navigate('/dashboard');
         } catch (error) {
             console.error('Error during login', error);
             setError(error.message || "Failed to log in.");
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Register function
     const handleRegisterOnClick = async () => {
+        setLoading(true);
         try {
             const response = await fetch(`${BASE_URL}/register`, {
                 method: 'POST',
@@ -51,6 +54,8 @@ export default function Login() {
         } catch (error) {
             console.error('Error during registration:', error);
             setError(error.message || "Failed to register.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -89,7 +94,15 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <Button style={{ backgroundColor: "#ff4d00", marginTop: "1rem" }} variant="contained" fullWidth onClick={handleLoginOnClick}>LOGIN</Button>
+                        <Button
+                            style={{ backgroundColor: "#ff4d00", marginTop: "1rem" }}
+                            variant="contained"
+                            fullWidth
+                            onClick={handleLoginOnClick}
+                            disabled={loading}
+                        >
+                            {loading ? <CircularProgress size={22} style={{ color: "#fff" }} /> : 'LOGIN'}
+                        </Button>
                         {error && <div style={{ color: 'red', textAlign: 'center', marginTop: "1rem" }}>{error}</div>}
                     </div>
                 )}
@@ -136,7 +149,15 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <Button style={{ backgroundColor: "#ff4d00", marginTop: "1rem" }} variant="contained" fullWidth onClick={handleRegisterOnClick}>REGISTER</Button>
+                        <Button
+                            style={{ backgroundColor: "#ff4d00", marginTop: "1rem" }}
+                            variant="contained"
+                            fullWidth
+                            onClick={handleRegisterOnClick}
+                            disabled={loading}
+                        >
+                            {loading ? <CircularProgress size={22} style={{ color: "#fff" }} /> : 'REGISTER'}
+                        </Button>
                         {error && <div style={{ color: 'red', textAlign: 'center', marginTop: "1rem" }}>{error}</div>}
                     </div>
                 )}
