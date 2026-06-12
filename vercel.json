@@ -1,6 +1,4 @@
 {
-  "buildCommand": "cd frontend/crime-app && npm install && npm run build",
-  "outputDirectory": "frontend/crime-app/build",
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
