@@ -66,50 +66,36 @@ function SearchCrimeData() {
     return `${month}/${day}/${year}`;
   };
 
-  const mapCenter = [34.0522, -118.2437];
-  const zoomLevel = 10;
-
   return (
     <div className="search-crime-data">
-      <h1 className="header-title">Search Crime Data</h1>
-      <p className="instructions">Enter the search criteria:</p>
-
-      <form onSubmit={handleSubmit} className="search-form horizontal-form">
-        <div className="form-group">
-          <input
-            type="date"
-            name="date_occ"
-            value={inputs.date_occ}
-            onChange={handleChange}
-            className="input-field"
-            placeholder="Date"
-          />
-        </div>
-
-        <div className="form-group">
-          <select
-            name="crm_cd_desc"
-            value={inputs.crm_cd_desc}
-            onChange={handleChange}
-            className="input-field"
-          >
-            <option value="">Select a crime description</option>
-            {crimeDescriptions.map((desc, i) => (
-              <option key={i} value={desc}>{desc}</option>
-            ))}
-          </select>
-        </div>
-
+      <form onSubmit={handleSubmit} className="search-bar">
+        <input
+          type="date"
+          name="date_occ"
+          value={inputs.date_occ}
+          onChange={handleChange}
+          className="input-field"
+        />
+        <select
+          name="crm_cd_desc"
+          value={inputs.crm_cd_desc}
+          onChange={handleChange}
+          className="input-field"
+        >
+          <option value="">Select a crime type</option>
+          {crimeDescriptions.map((desc, i) => (
+            <option key={i} value={desc}>{desc}</option>
+          ))}
+        </select>
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? <CircularProgress size={16} style={{ color: '#fff', verticalAlign: 'middle' }} /> : 'Search'}
         </button>
+        {error && <span className="error-message">{error}</span>}
       </form>
 
-      {error && <p className="error-message">{error}</p>}
-
-      <div className="map-container">
-        {results.length > 0 && (
-          <MapContainer center={mapCenter} zoom={zoomLevel} className="leaflet-map">
+      <div className="map-area">
+        {results.length > 0 ? (
+          <MapContainer center={[34.0522, -118.2437]} zoom={10}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -123,6 +109,14 @@ function SearchCrimeData() {
               </Marker>
             ))}
           </MapContainer>
+        ) : (
+          <div className="map-empty-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            <p>Select a date or crime type above to see results on the map</p>
+          </div>
         )}
       </div>
     </div>

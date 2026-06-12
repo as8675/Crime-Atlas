@@ -6,6 +6,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { CircularProgress } from '@mui/material';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import './AdvanceSearch.css';
 
 const customIcon = new L.Icon({
     iconUrl: placeholderIcon,
@@ -72,61 +73,70 @@ function KeywordSearch() {
     };
 
     return (
-        <div>
-            <div className="search-controls">
-                <input type="text" placeholder="Enter keyword (e.g., theft)" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+        <div className="map-page">
+            <div className="search-bar">
+                <input
+                    type="text"
+                    placeholder="Enter keyword (e.g., theft)"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                />
                 <button onClick={handleSearch} disabled={loading}>
                     {loading ? 'Searching...' : 'Search by Keyword'}
                 </button>
-                {loading && <CircularProgress size={20} style={{ marginLeft: '10px' }} />}
+                {loading && <CircularProgress size={20} />}
+                {crimeLocations.length > 0 && (
+                    <div className="search-controls" style={{ marginLeft: 'auto' }}>
+                        <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>← Prev</button>
+                        <span style={{ fontSize: '13px', color: '#555' }}>Page {currentPage}</span>
+                        <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage * itemsPerPage >= crimeLocations.length}>Next →</button>
+                    </div>
+                )}
             </div>
-            <div className="search-controls">
-                <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
-                <span> Page {currentPage} </span>
-                <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage * itemsPerPage >= crimeLocations.length}>Next</button>
+
+            <div className="map-fill">
+                <MapContainer center={[34.0522, -118.2437]} zoom={10}>
+                    <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    {currentItems.map((loc, index) => (
+                        <Marker
+                            key={index}
+                            position={[loc.latitude, loc.longitude]}
+                            icon={customIcon}
+                            eventHandlers={{ click: () => fetchCrimeData(loc.longitude, loc.latitude) }}
+                        >
+                            <Popup>
+                                {selectedLocation && selectedLocation.longitude === loc.longitude && selectedLocation.latitude === loc.latitude ? (
+                                    pinLoading ? (
+                                        <div style={{ textAlign: 'center', padding: '10px' }}>
+                                            <CircularProgress size={24} />
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <h2>Crime Data</h2>
+                                            {crimeData.map((data, idx) => (
+                                                <div key={idx} style={{ background: getCrimeIntensityColor(data.occurrences), padding: '5px', margin: '2px', borderRadius: '5px', fontSize: '12px' }}>
+                                                    {simplifyCrimeType(data.crimeType)}: <strong>{data.occurrences}</strong>
+                                                </div>
+                                            ))}
+                                            {imageData && (
+                                                <div>
+                                                    <a href={`${BASE_URL}/images/${imageData.filename}`} target="_blank" rel="noopener noreferrer">
+                                                        <img src={`${BASE_URL}/images/${imageData.filename}`} alt="Street View" style={{ width: '300px' }} />
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                ) : 'Click to load data'}
+                            </Popup>
+                        </Marker>
+                    ))}
+                </MapContainer>
             </div>
-            <MapContainer center={[34.0522, -118.2437]} zoom={10} className='map-container' style={{ height: '600px', width: '100%' }}>
-                <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-                {currentItems.map((loc, index) => (
-                    <Marker
-                        key={index}
-                        position={[loc.latitude, loc.longitude]}
-                        icon={customIcon}
-                        eventHandlers={{
-                            click: () => fetchCrimeData(loc.longitude, loc.latitude)
-                        }}
-                    >
-                        <Popup>
-                            {selectedLocation && selectedLocation.longitude === loc.longitude && selectedLocation.latitude === loc.latitude ? (
-                                pinLoading ? (
-                                    <div style={{ textAlign: 'center', padding: '10px' }}>
-                                        <CircularProgress size={24} />
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <h2>Crime Data</h2>
-                                        {crimeData.map((data, idx) => (
-                                            <div key={idx} style={{ background: getCrimeIntensityColor(data.occurrences), padding: '5px', margin: '2px', borderRadius: '5px', fontSize: '12px' }}>
-                                                {simplifyCrimeType(data.crimeType)}: <strong>{data.occurrences}</strong>
-                                            </div>
-                                        ))}
-                                        {imageData && (
-                                            <div>
-                                                <a href={`${BASE_URL}/images/${imageData.filename}`} target="_blank" rel="noopener noreferrer">
-                                                    <img src={`${BASE_URL}/images/${imageData.filename}`} alt="Street View" style={{ width: '300px' }} />
-                                                </a>
-                                            </div>
-                                        )}
-                                    </div>
-                                )
-                            ) : "Click to load data"}
-                        </Popup>
-                    </Marker>
-                ))}
-            </MapContainer>
         </div>
     );
 }
