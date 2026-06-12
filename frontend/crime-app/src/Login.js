@@ -23,7 +23,7 @@ export default function Login() {
     // Login function
     const handleLoginOnClick = async () => {
         try {
-            const response = await fetch('${BASE_URL}/login', {
+            const response = await fetch(`${BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -39,7 +39,7 @@ export default function Login() {
     // Register function
     const handleRegisterOnClick = async () => {
         try {
-            const response = await fetch('${BASE_URL}/register', {
+            const response = await fetch(`${BASE_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, phoneNumber, password })

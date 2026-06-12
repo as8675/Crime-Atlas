@@ -20,7 +20,7 @@ function SearchCrimeData() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('${BASE_URL}/get_details')
+    axios.get(`${BASE_URL}/get_details`)
       .then(res => setCrimeDescriptions(res.data.values))
       .catch(err => console.error('Error fetching crime descriptions:', err));
   }, []);
@@ -39,7 +39,7 @@ function SearchCrimeData() {
       };
       if (!formattedInputs.date_occ) delete formattedInputs.date_occ;
 
-      const res = await axios.get('${BASE_URL}/get_crime_data', { params: formattedInputs });
+      const res = await axios.get(`${BASE_URL}/get_crime_data`, { params: formattedInputs });
       if (res.status === 404 || res.data.length === 0) {
         setError('No documents found with the specified criteria.');
         setResults([]);

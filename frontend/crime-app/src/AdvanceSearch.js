@@ -63,7 +63,7 @@ function AdvanceSearch({ user }) {
         if (!newComment.trim()) return;
 
         try {
-            const response = await axios.post('${BASE_URL}/add_comment', {
+            const response = await axios.post(`${BASE_URL}/add_comment`, {
                 longitude,
                 latitude,
                 text: newComment,
