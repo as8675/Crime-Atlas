@@ -1,140 +1,227 @@
-/* Layout container */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .container {
     display: flex;
     height: 100vh;
-    background-color: #f4f4f4;
     overflow: hidden;
-  }
-  
-  /* Logo Section (Left Side) */
-  .subContainer {
-    flex: 0.5; 
-    background-color: #1e1e1e;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ── Left Panel ── */
+.subContainer {
+    flex: 1;
+    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-  }
-  
-  .image {
-    width: 70%;
-    max-width: 250px;
-    height: auto;
-    margin-bottom: 20px;
-    filter: drop-shadow(0 0 4px white);
-  }
-  
-  
-  .title-2 {
-    font-size: 32px;
-    font-weight: 700;
+    padding: 48px 40px;
+    gap: 0;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+}
+
+.image {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 16px rgba(255,255,255,0.3));
+}
+
+.title-2 {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
     color: white;
+}
+
+.tagline {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
     text-align: center;
-  }
-  
-  /* Login/Register Card (Right Side) */
-  .tabContainer {
-    flex: 1.5; 
+    max-width: 260px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+}
+
+.features {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 2rem;
-    max-width: 440px;
-    margin: auto;
-    background-color: transparent;
-    box-shadow: none;
-    border-radius: 0;
-  }
-  
-  /* Heading */
-  .title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: #222;
-  }
-  
-  /* Style for Login/Register Tabs */
-  .MuiTab-root {
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: #555;
-    background-color: #f4f4f4;
-    text-transform: uppercase;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
-  
-  /* Active tab */
-  .MuiTab-root.Mui-selected {
-    background-color: #ff0000;
-    color: white !important;
-  }
-  
-  /* Remove underline */
-  .MuiTabs-indicator {
-    display: none;
-  }
-  
-  /* Add space between the tabs */
-  .MuiTabs-flexContainer {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-  }
-  
-  /* TextField spacing */
-  .MuiTextField-root {
-    margin-top: 14px;
+    gap: 20px;
     width: 100%;
-  }
-  
-  /* Form Buttons */
-  .tabContainer button {
-    background-color: #ff0000 !important;
-    color: white;
-    font-weight: bold;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    margin-top: 22px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-  }
-  
-  .tabContainer button:hover {
-    background-color: #cc0000 !important;
-    transform: scale(1.03);
-  }
-  
-  /* Error styling */
-  .tabContainer .error {
-    color: red;
-    text-align: center;
-    margin-top: 1rem;
+    max-width: 280px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.feature-text strong {
+    display: block;
     font-size: 14px;
-  }
-  
-  /* Mobile View */
-  @media (max-width: 768px) {
+    font-weight: 600;
+    color: white;
+}
+
+.feature-text span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+}
+
+/* ── Right Panel ── */
+.tabContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 40px;
+    background: #f0f2f5;
+}
+
+.login-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.login-card h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+}
+
+.login-card .subtitle {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 28px;
+}
+
+/* ── Tabs ── */
+.MuiTabs-root {
+    margin-bottom: 24px !important;
+}
+
+.MuiTab-root {
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    text-transform: none !important;
+    color: #888 !important;
+    padding: 8px 20px !important;
+    border-radius: 8px !important;
+    min-height: 36px !important;
+    transition: background 0.2s !important;
+}
+
+.MuiTab-root.Mui-selected {
+    background-color: #e8f0fe !important;
+    color: #1a73e8 !important;
+}
+
+.MuiTabs-indicator {
+    display: none !important;
+}
+
+.MuiTabs-flexContainer {
+    gap: 8px !important;
+}
+
+/* ── Fields ── */
+.MuiTextField-root {
+    margin-bottom: 16px !important;
+}
+
+.MuiOutlinedInput-root {
+    border-radius: 10px !important;
+    font-size: 14px !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #1a73e8 !important;
+}
+
+.MuiInputLabel-root.Mui-focused {
+    color: #1a73e8 !important;
+}
+
+/* ── Button ── */
+.login-card .MuiButton-root {
+    background-color: #1a73e8 !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    padding: 12px !important;
+    border-radius: 10px !important;
+    text-transform: none !important;
+    margin-top: 8px !important;
+    box-shadow: 0 2px 8px rgba(26,115,232,0.3) !important;
+    transition: background 0.2s, box-shadow 0.2s !important;
+}
+
+.login-card .MuiButton-root:hover {
+    background-color: #1557b0 !important;
+    box-shadow: 0 4px 16px rgba(26,115,232,0.4) !important;
+}
+
+.login-card .MuiButton-root:disabled {
+    background-color: #93b9f5 !important;
+    box-shadow: none !important;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
     .container {
-      flex-direction: column;
-      height: auto;
+        flex-direction: column;
     }
-  
+
     .subContainer {
-      width: 100%;
-      height: auto;
-      padding: 20px;
+        padding: 32px 24px;
+        flex: none;
     }
-  
+
+    .features {
+        display: none;
+    }
+
+    .tagline {
+        margin-bottom: 0;
+    }
+
     .tabContainer {
-      width: 100%;
-      max-width: 90%;
-      padding: 2rem 1rem;
+        flex: 1;
+        padding: 32px 20px;
     }
-  }
-  
+
+    .login-card {
+        padding: 28px 24px;
+    }
+}
