@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from './constants';
+import placeholderIcon from '../Images/placeholder.png';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './AdvanceSearch.css';
 
 const customIcon = new L.Icon({
-    iconUrl: 'https://profile-picture-docs.s3.us-east-1.amazonaws.com/placeholder.png',
+    iconUrl: placeholderIcon,
     iconSize: [15, 20],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
