@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Tab, Tabs, TextField } from "@mui/material";
-import { LOGIN_IMAGE_URL, BASE_URL } from './constants';
+import { BASE_URL } from './constants';
+import LOGIN_IMAGE_URL from './Logo.png';
 import "./Login.css";
 
 export default function Login() {
