@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, CircularProgress, Tab, Tabs, TextField } from "@mui/material";
 import { BASE_URL } from './constants';
+import { UserContext } from './App';
 import LOGIN_IMAGE_URL from './Logo.png';
 import "./Login.css";
 
+const SESSION_KEY = 'crimeAtlasSession';
+const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
+
 export default function Login() {
     const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
     const [showVerificationForm, setShowVerificationForm] = useState(false);
     const [email, setEmail] = useState("");
@@ -31,6 +36,13 @@ export default function Login() {
                 body: JSON.stringify({ email, password })
             });
             if (!response.ok) throw new Error('Failed to log in');
+            const data = await response.json();
+            localStorage.setItem(SESSION_KEY, JSON.stringify({
+                token: data.token,
+                user: data.user,
+                expiresAt: Date.now() + SESSION_DURATION_MS
+            }));
+            setUser(data.user);
             navigate('/dashboard');
         } catch (error) {
             console.error('Error during login', error);

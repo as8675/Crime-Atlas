@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from './App';
 import './dashboard.css';
 import SearchCrimeData from './SearchCrimeData';
 import AdvanceSearch from './AdvanceSearch';
@@ -8,8 +9,11 @@ import logo from './Logo.png';
 
 function Dashboard() {
   const [selectedView, setSelectedView] = useState('basic-search');
+  const { setUser } = useContext(UserContext);
 
   const handleSignOut = () => {
+    localStorage.removeItem('crimeAtlasSession');
+    setUser(null);
     window.location.href = '/';
   };
 

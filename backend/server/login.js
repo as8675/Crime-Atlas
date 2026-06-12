@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-// Define User Schema directly within the file
 const UserSchema = new mongoose.Schema({
     name: String,
     email: { type: String, unique: true },
@@ -11,10 +11,8 @@ const UserSchema = new mongoose.Schema({
     password: String
 });
 
-// Create User model
 const User = mongoose.model('Users', UserSchema);
 
-// Register endpoint
 router.post('/register', async (req, res) => {
     try {
         const { name, email, phoneNumber, password } = req.body;
@@ -28,7 +26,6 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Login endpoint
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -38,12 +35,20 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).send("Invalid credentials");
 
-        res.status(200).send("User logged in successfully");
+        const token = jwt.sign(
+            { email: user.email, name: user.name },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.status(200).json({
+            token,
+            user: { name: user.name, email: user.email }
+        });
     } catch (error) {
         console.log(error);
         res.status(500).send("Error during login");
     }
 });
 
-// Export the router
 module.exports = router;
