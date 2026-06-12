@@ -43,12 +43,7 @@ const STATS = [
 ];
 
 const TEAM = [
-    'Kush Ahir',
     'Ayush Setpal',
-    'Sameeksha Rao',
-    'Aarushi Sharma',
-    'Aditya Joshi',
-    'Prasad Adahu',
 ];
 
 const GLOSSARY = [
