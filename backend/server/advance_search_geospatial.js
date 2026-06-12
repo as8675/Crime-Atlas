@@ -150,26 +150,25 @@ router.get('/get_crime_data_at_coordinates', async (req, res) => {
             latitude: parseFloat(latitude)
         }).sort({ createdAt: -1 });
 
-        // Call the internal API to get or create an image
-        const imageResponse = await axios.get(`http://localhost:${process.env.PORT}/get-or-create-image`, {
-            params: { latitude, longitude }
-        });
+        let imageData = null;
+        try {
+            const imageResponse = await axios.get(`http://localhost:${process.env.PORT}/get-or-create-image`, {
+                params: { latitude, longitude }
+            });
+            imageData = imageResponse.data;
+        } catch (imgError) {
+            console.error('Image fetch failed:', imgError.message);
+        }
 
-        // Combine results and send response
         res.json({
             crimeData: crimeResults,
             comments: comments,
-            imageData: imageResponse.data
+            imageData: imageData
         });
 
     } catch (error) {
         console.error('Server error:', error);
-        if (error.response) {
-            // Forward the status code from the internal API call if it failed
-            res.status(error.response.status).send(error.response.data);
-        } else {
-            res.status(500).send('Server error occurred.');
-        }
+        res.status(500).send('Server error occurred.');
     }
 });
 
@@ -259,22 +258,24 @@ router.get('/get_crime_data_at_coordinates_with_keyword', async (req, res) => {
             });
         }
 
-        const imageResponse = await axios.get(`http://localhost:${process.env.PORT}/get-or-create-image`, {
-            params: { latitude, longitude }
-        });
+        let imageData = null;
+        try {
+            const imageResponse = await axios.get(`http://localhost:${process.env.PORT}/get-or-create-image`, {
+                params: { latitude, longitude }
+            });
+            imageData = imageResponse.data;
+        } catch (imgError) {
+            console.error('Image fetch failed:', imgError.message);
+        }
 
         res.json({
             crimeData: crimeResults,
-            imageData: imageResponse.data
+            imageData: imageData
         });
 
     } catch (error) {
         console.error("Server error:", error);
-        if (error.response) {
-            res.status(error.response.status).send(error.response.data);
-        } else {
-            res.status(500).json({ error: "Server error occurred.", keyword: keyword });
-        }
+        res.status(500).json({ error: "Server error occurred.", keyword: keyword });
     }
 });
 
